@@ -76,6 +76,14 @@ h1.mega{font-family:var(--display);font-weight:400;font-size:clamp(40px,6vw,84px
 .mega .w{display:inline-block;transform:translateY(108%);animation:rise 1.1s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--i)*110ms + 150ms)}
 @keyframes rise{to{transform:none}}
 .mega .hl{color:inherit}
+/* фірмовий напис: власні літери з однієї лінії */
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wm{display:block;width:min(100%,940px);height:auto;overflow:visible}
+.wm path{fill:none;stroke:var(--fg);stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 1;animation:draw 1.1s cubic-bezier(.65,0,.35,1) both;animation-delay:calc(var(--k)*85ms + 200ms)}
+.wm .dot{fill:var(--accent);transform-box:fill-box;transform-origin:center;animation:popdot .55s cubic-bezier(.3,1.6,.5,1) both;animation-delay:1.9s}
+@keyframes draw{0%{stroke-dashoffset:1;opacity:0}1%{opacity:1}100%{stroke-dashoffset:0;opacity:1}}
+@keyframes popdot{0%{transform:scale(0)}100%{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.wm path,.wm .dot{animation:none}}
 .hero-rule{height:1px;background:var(--line);margin-top:48px;transform-origin:0 50%;animation:grow 1.6s .5s cubic-bezier(.2,.8,.2,1) both}
 @keyframes grow{from{transform:scaleX(0)}}
 
@@ -419,9 +427,31 @@ function shotsFor(p){
   return (p.mocks||["hero"]).map(k => p.category==="app" ? mockApp(p.hue, k) : mockWeb(p.hue, k));
 }
 
-/* заголовок: слова з'являються по черзі */
-$("#h-title").innerHTML = TITLE.split(/\s+/).map((w,i) => `<span class="ln"><span class="w${i?" hl":""}" style="--i:${i}">${esc(w)}</span></span> `).join("");
-$("#h-title").setAttribute("aria-label", TITLE);
+/* фірмовий напис: кожна літера намальована вручну на сітці і малюється лінією */
+(function(){
+  const G = {
+    "М": { w:70, d:["M0,100 V0 L35,64 L70,0 V100"] },
+    "о": { w:64, d:["M64,68 A32,32 0 1,1 0,68 A32,32 0 1,1 64,68"] },
+    "ї": { w:20, d:["M10,36 V100"], dots:[[1,16],[19,16]] },
+    "п": { w:56, d:["M0,100 V36 H56 V100"] },
+    "р": { w:64, d:["M0,36 V134","M64,68 A32,32 0 1,1 0,68 A32,32 0 1,1 64,68"] },
+    "е": { w:64, d:["M0,68 H64 A32,32 0 1,0 54.6,90.6"] },
+    "к": { w:50, d:["M0,36 V100","M48,36 L2,72","M18,60 L52,100"] },
+    "т": { w:52, d:["M0,36 H52","M26,36 V100"] },
+    "и": { w:52, d:["M0,36 V100 L52,36 V100"] },
+    " ": { w:22, d:[] }
+  };
+  const GAP = 16, SW = 7;
+  let x = SW, out = "", k = 0;
+  for (const ch of TITLE){
+    const g = G[ch]; if (!g) continue;
+    g.d.forEach(d => { out += `<path d="${d}" transform="translate(${x} 0)" pathLength="1" style="--k:${k++}"/>`; });
+    (g.dots||[]).forEach(([cx,cy]) => { out += `<circle class="dot" cx="${x+cx}" cy="${cy}" r="6"/>`; });
+    x += g.w + GAP;
+  }
+  const W = x - GAP + SW;
+  $("#h-title").innerHTML = `<span class="sr">${esc(TITLE)}</span><svg class="wm" viewBox="0 -8 ${W} 152" stroke-width="${SW}" aria-hidden="true">${out}</svg>`;
+})();
 
 /* ---------- фільтр і картки ---------- */
 let filter = "all";
