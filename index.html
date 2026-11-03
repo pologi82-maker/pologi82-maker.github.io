@@ -6,7 +6,7 @@
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
-<title>Мої проекти</title>
+<title>Мої проєкти</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500&display=swap">
@@ -85,7 +85,12 @@ h1.mega{font-family:var(--display);font-weight:400;font-size:clamp(40px,6vw,84px
 @keyframes popdot{0%{transform:scale(0)}100%{transform:scale(1)}}
 @keyframes blink{0%,20%,48%,68%,100%{transform:scale(1,1)}10%,58%{transform:scale(1.15,.12)}}
 @media (prefers-reduced-motion:reduce){.wm path,.wm .dot{animation:none}}
-.hero-rule{height:1px;background:var(--line);margin-top:48px;transform-origin:0 50%;animation:grow 1.6s .5s cubic-bezier(.2,.8,.2,1) both}
+.tagline{margin:32px 0 0;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;color:var(--muted);font-size:clamp(15px,1.7vw,20px);font-weight:400;letter-spacing:.005em;animation:fadeup .9s cubic-bezier(.2,.8,.2,1) 1.9s both}
+.tagline span{display:inline-flex;align-items:center;gap:14px;white-space:nowrap}
+.tagline i{width:4px;height:4px;border-radius:50%;background:var(--accent);opacity:.8;display:block}
+@keyframes fadeup{from{opacity:0;transform:translateY(10px)}}
+@media (prefers-reduced-motion:reduce){.tagline{animation:none}}
+.hero-rule{height:1px;background:var(--line);margin-top:44px;transform-origin:0 50%;animation:grow 1.6s .5s cubic-bezier(.2,.8,.2,1) both}
 @keyframes grow{from{transform:scaleX(0)}}
 
 /* marquee */
@@ -218,7 +223,7 @@ dialog[open]{animation:pop .4s cubic-bezier(.2,.8,.2,1)}
 <div class="glow" id="glow"></div>
 
 <header class="hero" id="top">
-  <div class="wrap"><h1 class="mega" id="h-title"></h1><div class="hero-rule"></div></div>
+  <div class="wrap"><h1 class="mega" id="h-title"></h1><p class="tagline" id="h-tag"></p><div class="hero-rule"></div></div>
 </header>
 
 <section id="work">
@@ -262,7 +267,8 @@ dialog[open]{animation:pop .4s cubic-bezier(.2,.8,.2,1)}
 /* =====================================================================
    ВАШІ ДАНІ. Редагуйте лише цей блок.
    ===================================================================== */
-const TITLE = "Мої проекти";
+const TITLE = "Мої проєкти";
+const TAGLINE = ["Сайти", "Веб-сервіси", "Мобільні додатки", "AI-автоматизація"];
 
 const CATEGORIES = { web: "Сайти", saas: "Веб-сервіси", app: "Мобільні додатки" };
 
@@ -437,6 +443,7 @@ function shotsFor(p){
     "п": { w:56, d:["M0,100 V36 H56 V100"] },
     "р": { w:64, d:["M0,36 V134","M64,68 A32,32 0 1,1 0,68 A32,32 0 1,1 64,68"] },
     "е": { w:64, d:["M0,68 H64 A32,32 0 1,0 54.6,90.6"] },
+    "є": { w:60, d:["M54.6,45.4 A32,32 0 1,0 54.6,90.6","M0,68 H44"] },
     "к": { w:50, d:["M0,36 V100","M48,36 L2,72","M18,60 L52,100"] },
     "т": { w:52, d:["M0,36 H52","M26,36 V100"] },
     "и": { w:52, d:["M0,36 V100 L52,36 V100"] },
@@ -451,6 +458,7 @@ function shotsFor(p){
     x += g.w + GAP;
   }
   const W = x - GAP + SW;
+  $("#h-tag").innerHTML = TAGLINE.map(esc).map((t,i) => `<span>${i ? '<i aria-hidden="true"></i>' : ''}${t}</span>`).join(' ');
   $("#h-title").innerHTML = `<span class="sr">${esc(TITLE)}</span><svg class="wm" viewBox="0 -8 ${W} 152" stroke-width="${SW}" aria-hidden="true">${out}</svg>`;
 })();
 
