@@ -130,7 +130,7 @@ h2.title{font-family:var(--display);font-weight:500;font-size:clamp(36px,6vw,80p
 @keyframes pillsoft{0%{opacity:0;color:transparent;border-color:transparent;text-shadow:0 0 10px rgba(241,238,232,.7)}45%{opacity:1;color:transparent;border-color:transparent;text-shadow:0 0 6px rgba(241,238,232,.7)}100%{opacity:1}}
 @keyframes indsoft{0%{opacity:0}100%{opacity:1}}
 /* поява карток проєктів */
-.stack{transition:opacity .32s ease}
+.stack{transition:opacity .24s ease}
 .stack.leaving{opacity:0}
 /* картка проявляється з чорного: спочатку розмита, потім чітка */
 .rv-on .proj:not(.done){opacity:0}
@@ -142,13 +142,13 @@ h2.title{font-family:var(--display);font-weight:500;font-size:clamp(36px,6vw,80p
 /* текст картки теж спочатку розмитий: замість літер лише їхня м'яка тінь */
 .rv-on .proj.in:not(.done) .info *{animation:txtfocus var(--dur,1.2s) cubic-bezier(.4,0,.2,1) var(--delay,0s) both}
 @keyframes txtfocus{0%{color:transparent;border-color:transparent;text-shadow:0 0 14px rgba(241,238,232,.75)}45%{color:transparent;border-color:transparent;text-shadow:0 0 7px rgba(241,238,232,.75)}100%{text-shadow:0 0 0 transparent}}
-@keyframes cardin{0%{opacity:0}45%,100%{opacity:1}}
+@keyframes cardin{0%{opacity:0}35%,100%{opacity:1}}
 @keyframes softout{0%,40%{opacity:1}100%{opacity:0}}
 @media (prefers-reduced-motion:reduce){.filters button,.filters .ind{animation:none}.filters.ready .ind,.stack{transition:none}.rv-on .proj:not(.done),.rv-on .proj.in:not(.done){opacity:1;filter:none;animation:none}}
 .filters sup{font-family:var(--mono);font-size:10px;margin-left:5px;opacity:.7}
 
 /* project cards */
-.stack{display:grid;gap:28px;padding-bottom:40px}
+.stack{display:grid;align-content:start;gap:28px;padding-bottom:40px}
 .proj{--h:220;position:relative;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:0;text-decoration:none;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:22px;overflow:hidden;transform:scale(var(--s,1));transform-origin:50% 0;transition:border-color .3s;isolation:isolate}
 .proj:hover{border-color:color-mix(in srgb,var(--accent) 60%,var(--line))}
 .proj::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(500px circle at var(--mx,50%) var(--my,0%),var(--glow),transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none}
@@ -598,14 +598,24 @@ function applyFilter(){
   st.style.minHeight = st.offsetHeight + "px";
   st.classList.add("leaving");
   clearTimeout(filterTimer);
-  filterTimer = setTimeout(() => {
+  const token = ++filterToken;
+  /* картинки нових карток готуються, поки старі згасають */
+  const imgs = cards.filter(fits).flatMap(c => [...c.querySelectorAll(".frame img")]).filter(i => i.getAttribute("src"));
+  const ready = Promise.all(imgs.map(i => i.decode ? i.decode().catch(() => {}) : null));
+  const faded = new Promise(r => setTimeout(r, 240));
+  Promise.race([Promise.all([ready, faded]), new Promise(r => setTimeout(r, 900))]).then(() => {
+    if (token !== filterToken) return;
     cards.forEach(c => { c.hidden = !fits(c); c.classList.remove("in", "done"); c.style.removeProperty("--dur"); c.style.removeProperty("--delay"); });
     reindex();
-    st.classList.remove("leaving");
-    observeCards();
-    filterTimer = setTimeout(() => { st.style.minHeight = ""; }, 1400);
-  }, 320);
+    requestAnimationFrame(() => {
+      if (token !== filterToken) return;
+      st.classList.remove("leaving");
+      observeCards();
+      filterTimer = setTimeout(() => { st.style.minHeight = ""; }, 1300);
+    });
+  });
 }
+let filterToken = 0;
 addEventListener("resize", moveInd);
 
 /* картки проявляються, коли з'являються на екрані; перша — після вступної анімації */
