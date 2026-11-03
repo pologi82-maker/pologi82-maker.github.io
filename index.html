@@ -131,14 +131,16 @@ h2.title{font-family:var(--display);font-weight:500;font-size:clamp(36px,6vw,80p
 /* поява карток проєктів */
 .stack{transition:opacity .26s ease,translate .26s ease}
 .stack.leaving{opacity:0;translate:0 12px}
-.rv-on .proj .info>*{opacity:0;translate:0 18px;transition:opacity .7s ease,translate .9s cubic-bezier(.2,.8,.2,1)}
-.rv-on .proj.in .info>*{opacity:1;translate:0 0}
-.rv-on .proj .info>*:nth-child(2){transition-delay:.08s}.rv-on .proj .info>*:nth-child(3){transition-delay:.16s}.rv-on .proj .info>*:nth-child(4){transition-delay:.24s}.rv-on .proj .info>*:nth-child(5){transition-delay:.32s}
-.rv-on .proj .media .frame{clip-path:inset(0 0 100% 0 round 14px);transition:clip-path 1.1s cubic-bezier(.65,0,.35,1) .1s,transform .25s ease-out}
-.rv-on .proj.in .media .frame{clip-path:inset(0 0 0 0 round 14px)}
-.rv-on .proj .media img{scale:1.12;transition:scale 1.6s cubic-bezier(.2,.8,.2,1) .1s}
-.rv-on .proj.in .media img{scale:1}
-@media (prefers-reduced-motion:reduce){.filters button,.filters .ind{animation:none}.filters.ready .ind,.stack{transition:none}.rv-on .proj .info>*,.rv-on .proj .media .frame,.rv-on .proj .media img{opacity:1;translate:0 0;clip-path:none;scale:1;transition:none}}
+/* картка проявляється з чорного: спочатку розмита, потім чітка */
+.rv-on .proj:not(.done){opacity:0}
+.rv-on .proj.in:not(.done){animation:cardin var(--dur,1.2s) cubic-bezier(.4,0,.2,1) var(--delay,0s) both}
+/* розмиття без живого фільтра: поверх лежить маленька розмита копія, яка розчиняється */
+.frame{position:relative}
+.frame .soft{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;scale:1.06;pointer-events:none}
+.rv-on .proj.in:not(.done) .frame .soft{will-change:opacity;animation:softout var(--dur,1.2s) cubic-bezier(.4,0,.2,1) var(--delay,0s) both}
+@keyframes cardin{0%{opacity:0}45%,100%{opacity:1}}
+@keyframes softout{0%,40%{opacity:1}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.filters button,.filters .ind{animation:none}.filters.ready .ind,.stack{transition:none}.rv-on .proj:not(.done),.rv-on .proj.in:not(.done){opacity:1;filter:none;animation:none}}
 .filters sup{font-family:var(--mono);font-size:10px;margin-left:5px;opacity:.7}
 
 /* project cards */
@@ -545,9 +547,16 @@ function renderStack(){
         <ul class="chips">${p.stack.slice(0,4).map(s=>`<li>${esc(s)}</li>`).join("")}</ul>
         <div class="bottom"><span class="open">Дивитися проєкт</span><span class="arrow" aria-hidden="true">→</span></div>
       </div>
-      <div class="media"><div class="frame"><img src="${shotsFor(p)[0]}" alt="" loading="lazy"></div></div>
+      <div class="media"><div class="frame"><img src="${shotsFor(p)[0]}" alt=""><img class="soft" alt="" aria-hidden="true"></div></div>
     </a>`).join("");
+  $$(".proj .frame img:not(.soft)").forEach(softFor);
   bindCards(); stackFx(); observeCards();
+}
+/* маленька копія скриншота 40×25: розтягнута на всю картку, вона виглядає розмитою */
+function softFor(img){
+  const soft = img.parentElement.querySelector(".soft");
+  const make = () => { try { const c = document.createElement("canvas"); c.width = 40; c.height = 25; c.getContext("2d").drawImage(img, 0, 0, 40, 25); soft.src = c.toDataURL(); } catch (e) {} };
+  if (img.complete && img.naturalWidth) make(); else img.addEventListener("load", make, { once: true });
 }
 $("#filters").addEventListener("click", e => {
   const b = e.target.closest("button"); if (!b || b.dataset.f === filter) return;
@@ -565,13 +574,15 @@ function observeCards(){
 }
 function startCards(){
   introAt = performance.now();
-  if (reduce || !("IntersectionObserver" in window)) { $$(".proj").forEach(c => c.classList.add("in")); return; }
+  if (reduce || !("IntersectionObserver" in window)) { $$(".proj").forEach(c => c.classList.add("in", "done")); return; }
   cardIO = new IntersectionObserver(es => es.forEach(e => {
     if (!e.isIntersecting) return;
-    cardIO.unobserve(e.target);
-    const wait = Math.max(0, introAt + 2400 - performance.now());
-    setTimeout(() => e.target.classList.add("in"), wait);
-  }), { threshold: .15 });
+    const c = e.target; cardIO.unobserve(c);
+    /* картки, видимі одразу, проявляються разом із заголовком (0,2–2,5 с), решта швидше */
+    if (performance.now() - introAt < 400) { c.style.setProperty("--dur", "2.3s"); c.style.setProperty("--delay", ".2s"); }
+    c.addEventListener("animationend", ev => { if (ev.animationName === "cardin") c.classList.add("done"); });
+    c.classList.add("in");
+  }), { threshold: .12 });
   observeCards();
 }
 
@@ -660,7 +671,7 @@ renderFilters(); renderStack(); route(); onScroll();
   const root = document.documentElement;
   let go = false;
   const start = () => { if (go) return; go = true; moveInd(); requestAnimationFrame(() => requestAnimationFrame(() => { root.classList.remove("intro-wait"); startCards(); })); };
-  const imgs = $$(".proj img").slice(0, 2).map(i => i.decode ? i.decode().catch(() => {}) : null);
+  const imgs = $$(".proj .frame img:not(.soft)").slice(0, 2).map(i => i.decode ? i.decode().then(() => softFor(i)).catch(() => {}) : null);
   const fonts = document.fonts ? document.fonts.ready : Promise.resolve();
   Promise.all([fonts, ...imgs]).then(start, start);
   setTimeout(start, 1200);
