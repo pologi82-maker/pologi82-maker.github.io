@@ -648,7 +648,7 @@ function bindCards(){
 
 /* картки накладаються і трохи зменшуються, коли їх закриває наступна */
 function stackFx(){
-  const cards = $$(".proj");
+  const cards = $$(".proj").filter(c => !c.hidden);
   cards.forEach((c,i) => {
     if (!wide.matches || reduce || !cards[i+1]) { c.style.removeProperty("--s"); c.style.removeProperty("--d"); return; }
     const top = parseFloat(getComputedStyle(c).top) || 0;
