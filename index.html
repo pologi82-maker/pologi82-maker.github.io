@@ -121,13 +121,14 @@ section{position:relative;z-index:1}
 .sec-head{display:flex;flex-wrap:wrap;gap:20px 32px;justify-content:space-between;align-items:end;padding-block:40px 36px}
 h2.title{font-family:var(--display);font-weight:500;font-size:clamp(36px,6vw,80px);line-height:1;letter-spacing:-.035em;margin:0;text-wrap:balance}
 .filters{position:relative;display:flex;flex-wrap:wrap;gap:8px}
-.filters button{position:relative;z-index:1;font:inherit;font-size:14px;font-weight:500;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--fg);padding:9px 16px;border-radius:999px;transition:color .4s cubic-bezier(.65,0,.35,1),border-color .3s;animation:pillin .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*80ms + 2300ms)}
+.filters button{position:relative;z-index:1;font:inherit;font-size:14px;font-weight:400;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--fg);padding:9px 16px;border-radius:999px;transition:color .3s ease,border-color .4s ease;animation:pillsoft 1.2s cubic-bezier(.4,0,.2,1) backwards;animation-delay:calc(var(--i)*90ms + 1100ms)}
 .filters button:hover{border-color:var(--fg)}
-.filters button[aria-pressed="true"]{color:var(--bg);border-color:transparent}
+.filters button[aria-pressed="true"]{color:var(--bg);border-color:transparent;transition:color .35s ease .3s,border-color .4s ease}
 /* світла «пігулка», яка перекочується до активної кнопки */
-.filters .ind{position:absolute;z-index:0;left:0;top:0;border-radius:999px;background:var(--fg);pointer-events:none;animation:pillin .7s cubic-bezier(.2,.8,.2,1) 2300ms both}
-.filters.ready .ind{transition:transform .55s cubic-bezier(.65,0,.35,1),width .55s cubic-bezier(.65,0,.35,1),height .55s cubic-bezier(.65,0,.35,1)}
-@keyframes pillin{from{opacity:0;translate:0 14px}}
+.filters .ind{position:absolute;z-index:0;left:0;top:0;border-radius:999px;background:var(--fg);pointer-events:none;animation:indsoft 1.2s cubic-bezier(.4,0,.2,1) 1100ms backwards}
+.filters.ready .ind{transition:transform .7s cubic-bezier(.4,0,.2,1),width .7s cubic-bezier(.4,0,.2,1),height .7s cubic-bezier(.4,0,.2,1)}
+@keyframes pillsoft{0%{opacity:0;color:transparent;border-color:transparent;text-shadow:0 0 10px rgba(241,238,232,.7)}45%{opacity:1;color:transparent;border-color:transparent;text-shadow:0 0 6px rgba(241,238,232,.7)}100%{opacity:1}}
+@keyframes indsoft{0%{opacity:0}100%{opacity:1}}
 /* поява карток проєктів */
 .stack{transition:opacity .26s ease,translate .26s ease}
 .stack.leaving{opacity:0;translate:0 12px}
