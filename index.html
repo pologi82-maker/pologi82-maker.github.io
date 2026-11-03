@@ -670,6 +670,7 @@ function route(){
 /* закриття: сторінка проєкту плавно згасає, а не зникає різко */
 function closeDetail(){
   if (!dlg.open || dlg.classList.contains("closing")) return;
+  if (location.hash.startsWith("#p-")) { try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {} }
   if (reduce) { dlg.close(); return; }
   dlg.classList.add("closing");
   closeTimer = setTimeout(() => { dlg.classList.remove("closing"); dlg.close(); }, 280);
