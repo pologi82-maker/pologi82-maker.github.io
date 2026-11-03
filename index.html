@@ -130,8 +130,8 @@ h2.title{font-family:var(--display);font-weight:500;font-size:clamp(36px,6vw,80p
 @keyframes pillsoft{0%{opacity:0;color:transparent;border-color:transparent;text-shadow:0 0 10px rgba(241,238,232,.7)}45%{opacity:1;color:transparent;border-color:transparent;text-shadow:0 0 6px rgba(241,238,232,.7)}100%{opacity:1}}
 @keyframes indsoft{0%{opacity:0}100%{opacity:1}}
 /* поява карток проєктів */
-.stack{transition:opacity .26s ease,translate .26s ease}
-.stack.leaving{opacity:0;translate:0 12px}
+.stack{transition:opacity .32s ease}
+.stack.leaving{opacity:0}
 /* картка проявляється з чорного: спочатку розмита, потім чітка */
 .rv-on .proj:not(.done){opacity:0}
 .rv-on .proj.in:not(.done){animation:cardin var(--dur,1.2s) cubic-bezier(.4,0,.2,1) var(--delay,0s) both}
@@ -541,9 +541,9 @@ function selectFilter(f){
 }
 function plural(n,f){ const a=n%10,b=n%100; return f[(a===1&&b!==11)?0:(a>=2&&a<=4&&(b<12||b>14))?1:2]; }
 function renderStack(){
-  const list = PROJECTS.filter(p => filter==="all" || p.category===filter);
+  const list = PROJECTS; /* усі картки створюються один раз, фільтр лише ховає й показує їх */
   $("#stack").innerHTML = list.map((p,i) => `
-    <a class="proj" href="#p-${esc(p.id)}" style="--h:${p.hue};--i:${i}" aria-label="Відкрити проєкт ${esc(p.title)}">
+    <a class="proj" href="#p-${esc(p.id)}" data-cat="${esc(p.category)}" style="--h:${p.hue};--i:${i}" aria-label="Відкрити проєкт ${esc(p.title)}">
       <div class="info">
         <div class="top"><span class="mono">${esc(CATEGORIES[p.category]||"")} · ${esc(p.year)}</span></div>
         <h3>${esc(p.title)}</h3>
@@ -556,6 +556,23 @@ function renderStack(){
   $$(".proj .frame img:not(.soft)").forEach(softFor);
   bindCards(); stackFx(); observeCards();
 }
+/* коли сторінка нічим не зайнята, макети перетворюються на готові картинки, щоб зміна проєктів не гальмувала */
+function prerender(){
+  const queue = $$(".proj .frame img:not(.soft)").filter(i => i.src.startsWith("data:image/svg"));
+  const idle = window.requestIdleCallback || (fn => setTimeout(fn, 200));
+  const next = () => {
+    const img = queue.shift(); if (!img) return;
+    try {
+      const c = document.createElement("canvas"); c.width = 1280; c.height = 800;
+      c.getContext("2d").drawImage(img, 0, 0, 1280, 800);
+      c.toBlob(b => {
+        if (b) { const url = URL.createObjectURL(b), pre = new Image(); pre.src = url; (pre.decode ? pre.decode() : Promise.resolve()).then(() => { img.src = url; }).catch(() => {}); }
+        idle(next);
+      }, "image/png");
+    } catch (e) { idle(next); }
+  };
+  idle(next);
+}
 /* маленька копія скриншота 40×25: розтягнута на всю картку, вона виглядає розмитою */
 function softFor(img){
   const soft = img.parentElement.querySelector(".soft");
@@ -565,9 +582,30 @@ function softFor(img){
 $("#filters").addEventListener("click", e => {
   const b = e.target.closest("button"); if (!b || b.dataset.f === filter) return;
   filter = b.dataset.f; selectFilter(filter);
-  const st = $("#stack"); st.classList.add("leaving");
-  setTimeout(() => { renderStack(); st.classList.remove("leaving"); }, reduce ? 0 : 260);
+  applyFilter();
 });
+
+/* плавна зміна проєктів: старі згасають, висота блоку плавно змінюється, нові проявляються */
+let filterTimer = 0;
+function applyFilter(){
+  const st = $("#stack"), cards = $$(".proj");
+  const fits = c => filter === "all" || c.dataset.cat === filter;
+  const reindex = () => { let i = 0; cards.forEach(c => { if (!c.hidden) c.style.setProperty("--i", i++); }); stackFx(); };
+  if (reduce) { cards.forEach(c => c.hidden = !fits(c)); reindex(); return; }
+  const work = $("#work").getBoundingClientRect().top;
+  if (work < 0) scrollTo({ top: scrollY + work, behavior: "smooth" });
+  /* висота блоку тримається, поки проявляються нові картки, і зменшується вже поза екраном */
+  st.style.minHeight = st.offsetHeight + "px";
+  st.classList.add("leaving");
+  clearTimeout(filterTimer);
+  filterTimer = setTimeout(() => {
+    cards.forEach(c => { c.hidden = !fits(c); c.classList.remove("in", "done"); c.style.removeProperty("--dur"); c.style.removeProperty("--delay"); });
+    reindex();
+    st.classList.remove("leaving");
+    observeCards();
+    filterTimer = setTimeout(() => { st.style.minHeight = ""; }, 1400);
+  }, 320);
+}
 addEventListener("resize", moveInd);
 
 /* картки проявляються, коли з'являються на екрані; перша — після вступної анімації */
@@ -584,7 +622,7 @@ function startCards(){
     const c = e.target; cardIO.unobserve(c);
     /* картки, видимі одразу, проявляються разом із заголовком (0,2–2,5 с), решта швидше */
     if (performance.now() - introAt < 400) { c.style.setProperty("--dur", "2.3s"); c.style.setProperty("--delay", ".2s"); }
-    c.addEventListener("animationend", ev => { if (ev.animationName === "cardin") c.classList.add("done"); });
+    if (!c.dataset.al) { c.dataset.al = 1; c.addEventListener("animationend", ev => { if (ev.animationName === "cardin") c.classList.add("done"); }); }
     c.classList.add("in");
   }), { threshold: .12 });
   observeCards();
@@ -674,7 +712,7 @@ renderFilters(); renderStack(); route(); onScroll();
 (function(){
   const root = document.documentElement;
   let go = false;
-  const start = () => { if (go) return; go = true; moveInd(); requestAnimationFrame(() => requestAnimationFrame(() => { root.classList.remove("intro-wait"); startCards(); })); };
+  const start = () => { if (go) return; go = true; moveInd(); requestAnimationFrame(() => requestAnimationFrame(() => { root.classList.remove("intro-wait"); startCards(); setTimeout(prerender, 3200); })); };
   const imgs = $$(".proj .frame img:not(.soft)").slice(0, 2).map(i => i.decode ? i.decode().then(() => softFor(i)).catch(() => {}) : null);
   const fonts = document.fonts ? document.fonts.ready : Promise.resolve();
   Promise.all([fonts, ...imgs]).then(start, start);
