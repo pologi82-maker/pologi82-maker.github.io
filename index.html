@@ -78,21 +78,25 @@ h1.mega{font-family:var(--display);font-weight:400;font-size:clamp(40px,6vw,84px
 .mega .hl{color:inherit}
 /* фірмовий напис: власні літери з однієї лінії */
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.wm{display:block;width:min(100%,940px);height:auto;overflow:visible}
+.wm{display:block;width:min(100%,470px);height:auto;overflow:visible}
+/* м'яке світло за заголовком, з'являється разом із написом */
+.hero .wrap{position:relative}
+.halo{position:absolute;z-index:-1;left:-60px;top:20px;width:680px;max-width:calc(100% + 60px);height:300px;border-radius:50%;background:radial-gradient(closest-side,var(--glow),transparent 80%),radial-gradient(closest-side,var(--glow),transparent 55%);filter:blur(24px);pointer-events:none;animation:haloin 2.3s cubic-bezier(.65,0,.35,1) .2s both}
+@keyframes haloin{from{opacity:0;transform:scale(.85)}}
 .wm path{fill:none;stroke:var(--fg);stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 1;animation:draw 1.1s cubic-bezier(.65,0,.35,1) both;animation-delay:calc(var(--k)*85ms + 200ms)}
 .wm .dot{fill:var(--accent);transform-box:fill-box;transform-origin:center;animation:popdot .55s cubic-bezier(.3,1.6,.5,1) 1.9s both,blink 1.1s ease-in-out 3s 1 forwards}
 @keyframes draw{0%{stroke-dashoffset:1;opacity:0}1%{opacity:1}100%{stroke-dashoffset:0;opacity:1}}
 @keyframes popdot{0%{transform:scale(0)}100%{transform:scale(1)}}
 @keyframes blink{0%,20%,48%,68%,100%{transform:scale(1,1)}10%,58%{transform:scale(1.15,.12)}}
 @media (prefers-reduced-motion:reduce){.wm path,.wm .dot{animation:none}}
-.tagline{margin:32px 0 0;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;color:var(--muted);font-size:clamp(15px,1.7vw,20px);font-weight:400;letter-spacing:.005em}
+.tagline{margin:18px 0 0;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;color:var(--muted);font-size:13px;font-weight:400;letter-spacing:.01em}
 .tagline b{font-weight:inherit;display:inline-block;padding-right:2px;animation:wipe .8s cubic-bezier(.65,0,.35,1) both;animation-delay:calc(var(--t)*500ms + 200ms)}
 @keyframes wipe{0%{clip-path:inset(-10% 100% -10% -4px);transform:translateY(4px)}100%{clip-path:inset(-10% -4px -10% -4px);transform:none}}
-.tagline span{display:inline-flex;align-items:center;gap:14px;white-space:nowrap}
-.tagline i{width:4px;height:4px;border-radius:50%;background:var(--accent);opacity:.8;display:block;animation:popdot .5s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(var(--t)*500ms + 100ms)}
+.tagline span{display:inline-flex;align-items:center;gap:10px;white-space:nowrap}
+.tagline i{width:3px;height:3px;border-radius:50%;background:var(--accent);opacity:.8;display:block;animation:popdot .5s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(var(--t)*500ms + 100ms)}
 @keyframes fadeup{from{opacity:0;transform:translateY(10px)}}
-@media (prefers-reduced-motion:reduce){.tagline b,.tagline i,.hero-rule{animation:none}}
-.hero-rule{height:1px;background:var(--line);margin-top:44px;transform-origin:0 50%;animation:grow 2.3s cubic-bezier(.65,0,.35,1) .2s both}
+@media (prefers-reduced-motion:reduce){.tagline b,.tagline i,.hero-rule,.halo{animation:none}}
+.hero-rule{height:1px;background:var(--line);margin-top:40px;transform-origin:0 50%;animation:grow 2.3s cubic-bezier(.65,0,.35,1) .2s both}
 @keyframes grow{from{transform:scaleX(0)}}
 
 /* marquee */
@@ -118,7 +122,7 @@ h2.title{font-family:var(--display);font-weight:500;font-size:clamp(36px,6vw,80p
 .proj{--h:220;position:relative;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:0;text-decoration:none;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:22px;overflow:hidden;transform:scale(var(--s,1));transform-origin:50% 0;transition:border-color .3s;isolation:isolate}
 .proj:hover{border-color:color-mix(in srgb,var(--accent) 60%,var(--line))}
 .proj::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(500px circle at var(--mx,50%) var(--my,0%),var(--glow),transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none}
-.proj:hover::before{opacity:1}
+
 .proj::after{content:"";position:absolute;inset:0;z-index:5;background:var(--bg);opacity:var(--d,0);pointer-events:none}
 @media (min-width:900px){.proj{position:sticky;top:calc(92px + env(safe-area-inset-top,0px) + var(--i,0)*14px);min-height:540px}}
 .info{position:relative;z-index:1;padding:clamp(24px,3.4vw,48px);display:flex;flex-direction:column;gap:18px;min-width:0}
@@ -222,10 +226,9 @@ dialog[open]{animation:pop .4s cubic-bezier(.2,.8,.2,1)}
 </style>
 
 <div class="progress" id="progress"></div>
-<div class="glow" id="glow"></div>
 
 <header class="hero" id="top">
-  <div class="wrap"><h1 class="mega" id="h-title"></h1><p class="tagline" id="h-tag"></p><div class="hero-rule"></div></div>
+  <div class="wrap"><div class="halo" aria-hidden="true"></div><h1 class="mega" id="h-title"></h1><p class="tagline" id="h-tag"></p><div class="hero-rule"></div></div>
 </header>
 
 <section id="work">
@@ -534,12 +537,6 @@ function onScroll(){
 addEventListener("scroll", onScroll, { passive:true });
 addEventListener("resize", onScroll);
 
-/* підсвітка під курсором на всій сторінці */
-const glow = $("#glow");
-if (matchMedia("(pointer:fine)").matches && !reduce){
-  addEventListener("pointermove", e => { glow.style.transform = `translate(${e.clientX}px,${e.clientY}px)`; glow.classList.add("on"); }, { passive:true });
-  document.addEventListener("pointerleave", () => glow.classList.remove("on"));
-}
 
 /* ---------- сторінка проєкту ---------- */
 const dlg = $("#detail");
