@@ -85,12 +85,14 @@ h1.mega{font-family:var(--display);font-weight:400;font-size:clamp(40px,6vw,84px
 @keyframes popdot{0%{transform:scale(0)}100%{transform:scale(1)}}
 @keyframes blink{0%,20%,48%,68%,100%{transform:scale(1,1)}10%,58%{transform:scale(1.15,.12)}}
 @media (prefers-reduced-motion:reduce){.wm path,.wm .dot{animation:none}}
-.tagline{margin:32px 0 0;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;color:var(--muted);font-size:clamp(15px,1.7vw,20px);font-weight:400;letter-spacing:.005em;animation:fadeup .9s cubic-bezier(.2,.8,.2,1) 1.9s both}
+.tagline{margin:32px 0 0;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;color:var(--muted);font-size:clamp(15px,1.7vw,20px);font-weight:400;letter-spacing:.005em}
+.tagline b{font-weight:inherit;display:inline-block;padding-right:2px;animation:wipe .8s cubic-bezier(.65,0,.35,1) both;animation-delay:calc(var(--t)*500ms + 200ms)}
+@keyframes wipe{0%{clip-path:inset(-10% 100% -10% -4px);transform:translateY(4px)}100%{clip-path:inset(-10% -4px -10% -4px);transform:none}}
 .tagline span{display:inline-flex;align-items:center;gap:14px;white-space:nowrap}
-.tagline i{width:4px;height:4px;border-radius:50%;background:var(--accent);opacity:.8;display:block}
+.tagline i{width:4px;height:4px;border-radius:50%;background:var(--accent);opacity:.8;display:block;animation:popdot .5s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(var(--t)*500ms + 100ms)}
 @keyframes fadeup{from{opacity:0;transform:translateY(10px)}}
-@media (prefers-reduced-motion:reduce){.tagline{animation:none}}
-.hero-rule{height:1px;background:var(--line);margin-top:44px;transform-origin:0 50%;animation:grow 1.6s .5s cubic-bezier(.2,.8,.2,1) both}
+@media (prefers-reduced-motion:reduce){.tagline b,.tagline i,.hero-rule{animation:none}}
+.hero-rule{height:1px;background:var(--line);margin-top:44px;transform-origin:0 50%;animation:grow 2.3s cubic-bezier(.65,0,.35,1) .2s both}
 @keyframes grow{from{transform:scaleX(0)}}
 
 /* marquee */
@@ -458,7 +460,7 @@ function shotsFor(p){
     x += g.w + GAP;
   }
   const W = x - GAP + SW;
-  $("#h-tag").innerHTML = TAGLINE.map(esc).map((t,i) => `<span>${i ? '<i aria-hidden="true"></i>' : ''}${t}</span>`).join(' ');
+  $("#h-tag").innerHTML = TAGLINE.map(esc).map((t,i) => `<span style="--t:${i}">${i ? '<i aria-hidden="true"></i>' : ''}<b>${t}</b></span>`).join(' ');
   $("#h-title").innerHTML = `<span class="sr">${esc(TITLE)}</span><svg class="wm" viewBox="0 -8 ${W} 152" stroke-width="${SW}" aria-hidden="true">${out}</svg>`;
 })();
 
