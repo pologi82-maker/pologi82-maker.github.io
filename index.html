@@ -3,6 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Сайти · Веб-сервіси · Мобільні додатки · AI-автоматизація">
+<meta name="theme-color" content="#0B0B0D">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pologi82-maker.github.io/">
+<meta property="og:title" content="Мої проєкти">
+<meta property="og:description" content="Сайти · Веб-сервіси · Мобільні додатки · AI-автоматизація">
+<meta property="og:image" content="https://pologi82-maker.github.io/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="uk_UA">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
@@ -11,7 +26,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500&display=swap">
 <style>
-/* Layout: quiet, editorial. Huge serif title, hairline rules, project cards that stack on scroll. Deep ink background, warm white text, one champagne accent. */
+/* Layout: hand-drawn line wordmark with a line illustration, filter pills, project cards that stack on scroll. Always dark: deep ink background, warm white text, one champagne accent. */
 :root{
   --bg:#0B0B0D; --bg2:#101012; --surface:#121215; --surface2:#17171B;
   --fg:#F1EEE8; --muted:#8F8B84; --line:#26262B;
@@ -23,16 +38,6 @@
   --grain:.07;
   color-scheme:dark;
 }
-@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
-  --bg:#F4F2ED; --bg2:#ECE9E2; --surface:#FFFFFF; --surface2:#F7F5F0;
-  --fg:#16150F; --muted:#6B675D; --line:#DAD6CB;
-  --accent:#8A6B34; --accent2:#8A6B34; --on-accent:#FFFFFF;
-  --glow:rgba(138,107,52,.10); --shade:rgba(22,21,15,.55); --grain:.045; color-scheme:light}}
-:root[data-theme="light"]{
-  --bg:#F4F2ED; --bg2:#ECE9E2; --surface:#FFFFFF; --surface2:#F7F5F0;
-  --fg:#16150F; --muted:#6B675D; --line:#DAD6CB;
-  --accent:#8A6B34; --accent2:#8A6B34; --on-accent:#FFFFFF;
-  --glow:rgba(138,107,52,.10); --shade:rgba(22,21,15,.55); --grain:.045; color-scheme:light}
 
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -42,40 +47,21 @@ a{color:inherit}
 .wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .mono{font-family:var(--body);font-size:13px;font-weight:400;color:var(--muted)}
 
-/* progress + cursor glow */
+/* progress + grain */
 .progress{position:fixed;left:0;top:0;height:2px;width:100%;background:var(--accent);transform:scaleX(0);transform-origin:0 50%;z-index:60}
 body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:70;opacity:var(--grain);mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
-.glow{position:fixed;left:0;top:0;width:560px;height:560px;margin:-280px 0 0 -280px;border-radius:50%;background:radial-gradient(closest-side,var(--glow),transparent);pointer-events:none;z-index:0;opacity:0;transition:opacity .4s}
-.glow.on{opacity:1}
 
-/* nav */
-.nav{position:fixed;z-index:50;top:calc(14px + env(safe-area-inset-top,0px));left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));max-width:520px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 8px 8px 20px;border-radius:999px;border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 72%,transparent);-webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4)}
-.nav .logo{font-family:var(--display);font-style:italic;font-weight:500;font-size:26px;letter-spacing:-.01em;text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.nav ul{display:flex;gap:4px;list-style:none;margin:0;padding:0}
-.nav ul a{display:block;text-decoration:none;font-size:14px;font-weight:500;padding:8px 14px;border-radius:999px;color:var(--muted);transition:color .2s,background .2s}
-.nav ul a:hover{color:var(--fg);background:var(--surface2)}
-.nav .right{display:flex;gap:8px;align-items:center;flex:none}
-.icon-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--surface2);color:var(--fg);cursor:pointer;display:grid;place-items:center;font-size:16px;line-height:1}
-.pill{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:600;font-size:14px;border-radius:999px;padding:10px 18px;background:var(--fg);color:var(--bg);border:1px solid var(--fg);cursor:pointer;font-family:inherit;transition:transform .2s}
+.pill{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:400;font-size:14px;border-radius:999px;padding:10px 18px;background:var(--fg);color:var(--bg);border:1px solid var(--fg);cursor:pointer;font-family:inherit;transition:transform .3s cubic-bezier(.4,0,.2,1),border-color .3s ease}
 .pill:hover{transform:translateY(-2px)}
 .pill.ghost{background:transparent;color:var(--fg);border-color:var(--line)}
 .pill.ghost:hover{border-color:var(--fg)}
 .pill.accent{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
-@media (max-width:700px){.nav ul{display:none}}
-
-/* notice */
-.notice{position:relative;z-index:1;text-align:center;font-size:13px;color:var(--muted);padding:96px 16px 0}
-.notice b{color:var(--fg);font-weight:600}
 
 /* hero */
 .hero{position:relative;overflow:hidden;isolation:isolate}
 .hero::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(60% 60% at 50% 0%,var(--glow),transparent 72%)}
 .hero .wrap{padding-block:88px 24px}
 h1.mega{font-family:var(--display);font-weight:400;font-size:clamp(40px,6vw,84px);line-height:1.05;letter-spacing:-.035em;margin:0}
-.mega .ln{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.12em;margin-bottom:-.12em;padding-right:.04em}
-.mega .w{display:inline-block;transform:translateY(108%);animation:rise 1.1s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--i)*110ms + 150ms)}
-@keyframes rise{to{transform:none}}
-.mega .hl{color:inherit}
 /* фірмовий напис: власні літери з однієї лінії */
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .wm{display:block;width:min(100%,470px);height:auto;overflow:visible}
@@ -103,23 +89,13 @@ h1.mega{font-family:var(--display);font-weight:400;font-size:clamp(40px,6vw,84px
 @keyframes wipe{0%{clip-path:inset(-10% 100% -10% -4px);transform:translateY(4px)}100%{clip-path:inset(-10% -4px -10% -4px);transform:none}}
 .tagline span{display:inline-flex;align-items:center;gap:10px;white-space:nowrap}
 .tagline i{width:3px;height:3px;border-radius:50%;background:var(--accent);opacity:.8;display:block;animation:popdot .5s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(var(--t)*500ms + 100ms)}
-@keyframes fadeup{from{opacity:0;transform:translateY(10px)}}
 @media (prefers-reduced-motion:reduce){.tagline b,.tagline i,.hero-rule,.halo{animation:none}}
 .hero-rule{height:1px;background:var(--line);margin-top:40px;transform-origin:0 50%;animation:grow 2.3s cubic-bezier(.65,0,.35,1) .2s both}
 @keyframes grow{from{transform:scaleX(0)}}
 
-/* marquee */
-.marquee{border-block:1px solid var(--line);background:var(--bg2);overflow:hidden;padding:18px 0}
-.track{display:flex;width:max-content;animation:scroll 42s linear infinite}
-.marquee:hover .track{animation-play-state:paused}
-.track span{display:flex;align-items:center;gap:36px;padding-right:36px;font-family:var(--display);font-weight:500;font-size:clamp(20px,2.4vw,30px);letter-spacing:-.02em;color:var(--muted);white-space:nowrap}
-.track i{width:8px;height:8px;border-radius:50%;background:var(--accent);display:block}
-@keyframes scroll{to{transform:translateX(-50%)}}
-
 /* sections */
 section{position:relative;z-index:1}
 .sec-head{display:flex;flex-wrap:wrap;gap:20px 32px;justify-content:space-between;align-items:end;padding-block:40px 36px}
-h2.title{font-family:var(--display);font-weight:500;font-size:clamp(36px,6vw,80px);line-height:1;letter-spacing:-.035em;margin:0;text-wrap:balance}
 .filters{position:relative;display:flex;flex-wrap:wrap;gap:8px}
 .filters button{position:relative;z-index:1;font:inherit;font-size:14px;font-weight:400;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--fg);padding:9px 16px;border-radius:999px;transition:color .3s ease,border-color .4s ease;animation:pillsoft 1.2s cubic-bezier(.4,0,.2,1) backwards;animation-delay:calc(var(--i)*90ms + 1100ms)}
 .filters button:hover{border-color:var(--fg)}
@@ -151,13 +127,10 @@ h2.title{font-family:var(--display);font-weight:500;font-size:clamp(36px,6vw,80p
 .stack{display:grid;align-content:start;gap:28px;padding-bottom:40px}
 .proj{--h:220;position:relative;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:0;text-decoration:none;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:22px;overflow:hidden;transform:scale(var(--s,1));transform-origin:50% 0;transition:border-color .3s;isolation:isolate}
 .proj:hover{border-color:color-mix(in srgb,var(--accent) 60%,var(--line))}
-.proj::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(500px circle at var(--mx,50%) var(--my,0%),var(--glow),transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none}
-
 .proj::after{content:"";position:absolute;inset:0;z-index:5;background:var(--bg);opacity:var(--d,0);pointer-events:none}
 @media (min-width:900px){.proj{position:sticky;top:calc(92px + env(safe-area-inset-top,0px) + var(--i,0)*14px);min-height:540px}}
 .info{position:relative;z-index:1;padding:clamp(24px,3.4vw,48px);display:flex;flex-direction:column;gap:18px;min-width:0}
 .info .top{display:flex;justify-content:space-between;gap:12px;align-items:center}
-.tag-example{font-family:var(--mono);font-size:10px;letter-spacing:.06em;padding:3px 8px;border-radius:6px;background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--accent);text-transform:uppercase}
 .proj h3{font-family:var(--display);font-weight:400;font-size:clamp(26px,2.6vw,36px);line-height:1.15;letter-spacing:-.025em;margin:0;text-wrap:balance}
 .proj .sum{margin:0;color:var(--muted);max-width:42ch;font-size:17px}
 .chips{display:flex;flex-wrap:wrap;gap:6px;list-style:none;padding:0;margin:0}
@@ -171,53 +144,24 @@ h2.title{font-family:var(--display);font-weight:500;font-size:clamp(36px,6vw,80p
 .media img{width:100%;height:100%;object-fit:cover;display:block}
 @media (max-width:899px){.proj{grid-template-columns:minmax(0,1fr)}.media{order:-1;min-height:0}}
 
-/* about bento */
-.bento{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px}
-.cell{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:clamp(22px,2.6vw,36px);min-width:0;transition:border-color .3s,transform .4s cubic-bezier(.2,.8,.2,1)}
-.cell:hover{border-color:color-mix(in srgb,var(--accent) 50%,var(--line));transform:translateY(-4px)}
-.cell h3{margin:0 0 14px;font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.c-bio{grid-column:span 4;grid-row:span 2;display:flex;flex-direction:column;justify-content:space-between;gap:28px}
-.c-bio p{margin:0;font-family:var(--display);font-weight:500;font-size:clamp(24px,3vw,40px);line-height:1.12;letter-spacing:-.025em;text-wrap:pretty}
-.c-bio p em{font-style:normal;color:var(--accent)}
-.c-time{grid-column:span 2;display:flex;flex-direction:column;justify-content:space-between;gap:12px}
-.clock{font-family:var(--display);font-weight:500;font-size:clamp(44px,5vw,64px);line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
-.c-stats{grid-column:span 2;display:grid;gap:14px}
-.stat{display:flex;align-items:baseline;gap:12px}
-.stat b{font-family:var(--display);font-weight:500;font-size:44px;line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums;min-width:2.2ch}
-.stat span{color:var(--muted);font-size:15px}
-.c-skills{grid-column:span 3}
-.c-flow{grid-column:span 3}
-.flow{list-style:none;margin:0;padding:0;display:grid;gap:12px;counter-reset:s}
-.flow li{counter-increment:s;display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;align-items:start}
-.flow li::before{content:counter(s);width:34px;height:34px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font-family:var(--mono);font-size:12px;color:var(--accent)}
-.flow b{display:block;font-weight:600}
-.flow span{color:var(--muted);font-size:15px}
-@media (max-width:900px){.c-bio,.c-time,.c-stats,.c-skills,.c-flow{grid-column:span 6;grid-row:auto}.c-time,.c-stats{grid-column:span 3}}
-@media (max-width:560px){.c-time,.c-stats{grid-column:span 6}}
-
-/* contact */
-.contact{padding-block:120px 72px;text-align:left}
-.contact h2{font-family:var(--display);font-weight:500;font-size:clamp(44px,10vw,150px);line-height:.92;letter-spacing:-.045em;margin:0 0 40px;text-wrap:balance}
-.contact h2 span{display:inline-block;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
-.contact h2:hover span{transform:translateX(.12em)}
-.contact h2 .hl{background:linear-gradient(100deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
-.mail-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
-.mail{font-family:var(--mono);font-size:clamp(15px,2vw,20px);padding:12px 18px;border:1px solid var(--line);border-radius:999px;background:var(--surface);user-select:all;overflow-wrap:anywhere}
-.socials{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0;margin:28px 0 0}
-.socials a{display:inline-flex;gap:10px;align-items:baseline;text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:999px;font-size:15px;transition:border-color .2s,transform .2s}
-.socials a:hover{border-color:var(--accent);transform:translateY(-2px)}
-.socials span{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-footer .wrap{padding-block:28px 44px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;color:var(--muted);font-size:14px}
-
-/* reveal: content stays visible, only position animates */
-.rv{transform:translateY(36px);transition:transform .9s cubic-bezier(.2,.8,.2,1)}
-.rv.in{transform:none}
-
 /* detail dialog */
-dialog{border:0;padding:0;width:min(1120px,100%);max-width:100%;max-height:100%;height:100%;margin:0 auto;background:var(--bg);color:var(--fg)}
-dialog::backdrop{background:var(--shade);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
-dialog[open]{animation:pop .4s cubic-bezier(.2,.8,.2,1)}
-@keyframes pop{from{transform:translateY(32px) scale(.98);opacity:0}to{transform:none;opacity:1}}
+html:has(dialog[open]){overflow:hidden}
+dialog:focus{outline:none}
+dialog{border:0;padding:0;width:min(1120px,100%);max-width:100%;max-height:100%;height:100%;margin:0 auto;background:var(--bg);color:var(--fg);overscroll-behavior:contain}
+dialog::backdrop{background:rgba(4,4,6,.86)}
+dialog[open]{animation:dlgin .6s cubic-bezier(.4,0,.2,1) both}
+dialog[open]::backdrop{animation:bdin .5s ease both}
+dialog.closing{animation:dlgout .28s cubic-bezier(.4,0,.2,1) both}
+dialog.closing::backdrop{animation:bdout .28s ease both}
+@keyframes dlgin{from{opacity:0;translate:0 18px}}
+@keyframes dlgout{to{opacity:0;translate:0 12px}}
+@keyframes bdin{from{opacity:0}}
+@keyframes bdout{to{opacity:0}}
+/* вміст сторінки проєкту проявляється по черзі: з чорного, через розмиття, до чіткого */
+dialog[open] .d-anim,dialog[open] .d-anim *{animation:txtfocus 1s cubic-bezier(.4,0,.2,1) backwards;animation-delay:calc(var(--n,0)*80ms + 120ms)}
+dialog[open] .stage.d-anim{animation:cardin 1s cubic-bezier(.4,0,.2,1) backwards;animation-delay:calc(var(--n,0)*80ms + 120ms)}
+.stage img{transition:opacity .25s ease}
+.stage.swap img{opacity:0}
 @media (min-width:900px){dialog{height:auto;max-height:calc(100% - 48px);margin:24px auto;border-radius:24px;border:1px solid var(--line)}}
 .d-top{position:sticky;top:0;z-index:2;background:var(--bg);display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px max(16px,env(safe-area-inset-right,0px)) 14px max(16px,env(safe-area-inset-left,0px));padding-top:calc(14px + env(safe-area-inset-top,0px));border-bottom:1px solid var(--line)}
 @media (min-width:900px){.d-top{padding-top:14px}}
@@ -225,11 +169,12 @@ dialog[open]{animation:pop .4s cubic-bezier(.2,.8,.2,1)}
 .d-body{padding:28px max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px))}
 @media (min-width:900px){.d-body{padding:36px 44px 52px}}
 .d-body h2{font-family:var(--display);font-weight:400;font-size:clamp(32px,4vw,52px);line-height:1.1;margin:0 0 14px;letter-spacing:-.03em;text-wrap:balance}
-.lead{font-size:19px;color:var(--muted);margin:0 0 28px;max-width:60ch}
+.lead{font-size:18px;color:var(--muted);margin:0 0 28px;max-width:60ch}
 .stage{border-radius:18px;overflow:hidden;border:1px solid var(--line);background:var(--surface);aspect-ratio:16/10;max-width:100%}
 .stage img{width:100%;height:100%;object-fit:contain;display:block}
 .thumbs{display:flex;gap:10px;margin-top:12px;overflow-x:auto;padding-bottom:4px}
-.thumbs button{flex:0 0 auto;width:120px;aspect-ratio:16/10;padding:0;border-radius:10px;overflow:hidden;border:2px solid transparent;cursor:pointer;background:var(--surface)}
+.thumbs button{flex:0 0 auto;width:120px;aspect-ratio:16/10;padding:0;border-radius:10px;overflow:hidden;border:2px solid transparent;cursor:pointer;background:var(--surface);transition:border-color .3s ease}
+.thumbs button:hover{border-color:var(--line)}
 .thumbs button[aria-current="true"]{border-color:var(--accent)}
 .thumbs img{width:100%;height:100%;object-fit:cover;display:block}
 .cols{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:48px;margin-top:40px}
@@ -247,11 +192,9 @@ dialog[open]{animation:pop .4s cubic-bezier(.2,.8,.2,1)}
 
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
-  .blob,.track,.pulse::after{animation:none}
-  .mega .w{animation:none;transform:none}
-  .rv{transform:none;transition:none}
-  .proj,.cell,.arrow,.media .frame{transition:none}
-  dialog[open]{animation:none}
+  .proj,.arrow,.media .frame{transition:none}
+  dialog[open],dialog[open]::backdrop,dialog.closing,dialog.closing::backdrop,dialog[open] .d-anim,dialog[open] .d-anim *,dialog[open] .stage.d-anim{animation:none}
+  .stage img{transition:none}
 }
 /* вступна анімація чекає, поки підвантажиться шрифт, щоб не було ривків */
 .intro-wait .filters button,.intro-wait .filters .ind,.intro-wait .wm path,.intro-wait .wm .dot,.intro-wait .tagline b,.intro-wait .tagline i,.intro-wait .hero-rule,.intro-wait .halo,.intro-wait .art .ln,.intro-wait .art .dot{animation-play-state:paused}
@@ -297,26 +240,26 @@ dialog[open]{animation:pop .4s cubic-bezier(.2,.8,.2,1)}
   </div>
 </section>
 
-<dialog id="detail" aria-labelledby="d-title">
+<dialog id="detail" aria-labelledby="d-title" tabindex="-1">
   <div class="d-top">
-    <div class="d-meta mono" id="d-meta"></div>
+    <div class="d-meta mono d-anim" id="d-meta" style="--n:0"></div>
     <button class="pill ghost" id="d-close" type="button">Закрити ✕</button>
   </div>
   <div class="d-body">
-    <h2 id="d-title"></h2>
-    <p class="lead" id="d-lead"></p>
-    <div class="stage"><img id="d-img" alt=""></div>
-    <div class="thumbs" id="d-thumbs"></div>
+    <h2 id="d-title" class="d-anim" style="--n:0"></h2>
+    <p class="lead d-anim" id="d-lead" style="--n:1"></p>
+    <div class="stage d-anim" style="--n:2"><img id="d-img" alt=""></div>
+    <div class="thumbs d-anim" id="d-thumbs" style="--n:3"></div>
     <div class="cols">
       <div>
-        <section><h3>Задача</h3><p id="d-task"></p></section>
-        <section><h3>Що зроблено</h3><ul class="done" id="d-done"></ul></section>
-        <section><h3>Результат</h3><p class="result" id="d-result"></p></section>
+        <section class="d-anim" style="--n:4"><h3>Задача</h3><p id="d-task"></p></section>
+        <section class="d-anim" style="--n:5"><h3>Що зроблено</h3><ul class="done" id="d-done"></ul></section>
+        <section class="d-anim" style="--n:6"><h3>Результат</h3><p class="result" id="d-result"></p></section>
       </div>
       <aside class="facts">
-        <dl id="d-facts"></dl>
-        <div><h3>Технології</h3><ul class="chips" id="d-stack"></ul></div>
-        <div class="links" id="d-links"></div>
+        <dl id="d-facts" class="d-anim" style="--n:4"></dl>
+        <div class="d-anim" style="--n:5"><h3>Технології</h3><ul class="chips" id="d-stack"></ul></div>
+        <div class="links d-anim" id="d-links" style="--n:6"></div>
       </aside>
     </div>
   </div>
@@ -332,11 +275,10 @@ const TAGLINE = ["Сайти", "Веб-сервіси", "Мобільні дод
 const CATEGORIES = { web: "Сайти", saas: "Веб-сервіси", app: "Мобільні додатки" };
 
 /* Проєкти. images: шляхи до скриншотів, напр. ["images/zerno-1.png"].
-   Поки images порожній, показується намальований макет у кольорі hue (0–360).
-   example: true додає позначку «Приклад». */
+   Поки images порожній, показується намальований макет у кольорі hue (0–360). */
 const PROJECTS = [
   {
-    id: "zerno", example: true, category: "web", year: 2025, hue: 24,
+    id: "zerno", category: "web", year: 2025, hue: 24,
     title: "Кавʼярня «Зерно»",
     summary: "Сайт мережі кавʼярень з онлайн-меню, бронюванням столиків і замовленням на виніс.",
     client: "Мережа кавʼярень, Львів", role: "Дизайн, верстка, CMS", duration: "5 тижнів",
@@ -348,7 +290,7 @@ const PROJECTS = [
     images: [], mocks: ["hero", "grid", "hero"]
   },
   {
-    id: "fittrack", example: true, category: "app", year: 2025, hue: 150,
+    id: "fittrack", category: "app", year: 2025, hue: 150,
     title: "FitTrack",
     summary: "Мобільний додаток для тренувань із планами, трекером прогресу та нагадуваннями.",
     client: "Стартап у сфері фітнесу", role: "Розробка iOS та Android", duration: "4 місяці",
@@ -360,7 +302,7 @@ const PROJECTS = [
     images: [], mocks: ["ring", "list", "tiles"]
   },
   {
-    id: "autocrm", example: true, category: "saas", year: 2024, hue: 215,
+    id: "autocrm", category: "saas", year: 2024, hue: 215,
     title: "CRM для автосервісу",
     summary: "Веб-система для запису клієнтів, обліку ремонтів і складу запчастин.",
     client: "СТО, Київ", role: "Full-stack розробка", duration: "3 місяці",
@@ -372,7 +314,7 @@ const PROJECTS = [
     images: [], mocks: ["dash", "dash", "grid"]
   },
   {
-    id: "smak", example: true, category: "app", year: 2024, hue: 350,
+    id: "smak", category: "app", year: 2024, hue: 350,
     title: "Доставка «Смак»",
     summary: "Додаток доставки їжі з каталогом, кошиком, оплатою та відстеженням курʼєра.",
     client: "Ресторан домашньої кухні", role: "Мобільна розробка", duration: "10 тижнів",
@@ -384,7 +326,7 @@ const PROJECTS = [
     images: [], mocks: ["tiles", "list", "ring"]
   },
   {
-    id: "edu", example: true, category: "web", year: 2024, hue: 262,
+    id: "edu", category: "web", year: 2024, hue: 262,
     title: "Лендинг онлайн-школи",
     summary: "Посадкова сторінка курсу з програмою, відгуками та оплатою.",
     client: "Онлайн-школа дизайну", role: "Дизайн і розробка", duration: "2 тижні",
@@ -396,7 +338,7 @@ const PROJECTS = [
     images: [], mocks: ["hero", "grid"]
   },
   {
-    id: "handmade", example: true, category: "web", year: 2023, hue: 42,
+    id: "handmade", category: "web", year: 2023, hue: 42,
     title: "Інтернет-магазин «Глина»",
     summary: "Магазин керамічного посуду ручної роботи з каталогом, фільтрами та доставкою Новою Поштою.",
     client: "Майстерня кераміки", role: "Розробка магазину", duration: "6 тижнів",
@@ -413,7 +355,6 @@ const PROJECTS = [
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const esc = s => String(s).replace(/[&<>"]/g, ch => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[ch]));
-const mark = (s, cls) => esc(s).replace(/\[\[(.+?)\]\]/g, `<span class="${cls}">$1</span>`);
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const wide = matchMedia("(min-width: 900px)");
 
@@ -539,7 +480,6 @@ function selectFilter(f){
   $("#filters").classList.add("ready");
   moveInd();
 }
-function plural(n,f){ const a=n%10,b=n%100; return f[(a===1&&b!==11)?0:(a>=2&&a<=4&&(b<12||b>14))?1:2]; }
 function renderStack(){
   const list = PROJECTS; /* усі картки створюються один раз, фільтр лише ховає й показує їх */
   $("#stack").innerHTML = list.map((p,i) => `
@@ -638,13 +578,10 @@ function startCards(){
   observeCards();
 }
 
-/* підсвітка під курсором і нахил скриншота */
+/* нахил скриншота за курсором */
 function bindCards(){
   $$(".proj").forEach(c => {
     c.addEventListener("pointermove", e => {
-      const r = c.getBoundingClientRect();
-      c.style.setProperty("--mx", (e.clientX - r.left) + "px");
-      c.style.setProperty("--my", (e.clientY - r.top) + "px");
       if (reduce || e.pointerType !== "mouse") return;
       const m = c.querySelector(".media").getBoundingClientRect();
       const x = (e.clientX - m.left) / m.width - .5, y = (e.clientY - m.top) / m.height - .5;
@@ -669,7 +606,7 @@ function stackFx(){
   });
 }
 
-/* ---------- прокрутка: смужка, поява блоків, лічильники ---------- */
+/* ---------- прокрутка: смужка прогресу ---------- */
 const bar = $("#progress");
 let ticking = false;
 function onScroll(){
@@ -686,13 +623,31 @@ addEventListener("resize", onScroll);
 
 /* ---------- сторінка проєкту ---------- */
 const dlg = $("#detail");
+const shotCache = {};
 function openProject(p){
-  const shots = shotsFor(p);
+  /* скриншоти генеруються один раз; перший береться з картки, де він уже готовий */
+  const shots = [...(shotCache[p.id] || (shotCache[p.id] = shotsFor(p)))];
+  const cardImg = $$(".proj .frame img:not(.soft)").find(i => i.closest(".proj").getAttribute("href") === "#p-" + p.id);
+  if (cardImg && cardImg.src) shots[0] = cardImg.src;
   $("#d-meta").innerHTML = `${esc(CATEGORIES[p.category]||"")} · ${esc(p.year)}`;
   $("#d-title").textContent = p.title;
   $("#d-lead").textContent = p.summary;
-  const show = i => { $("#d-img").src = shots[i]; $("#d-img").alt = `${p.title}, скриншот ${i+1} з ${shots.length}`;
-    $("#d-thumbs").querySelectorAll("button").forEach((b,j)=>b.setAttribute("aria-current", j===i)); };
+  const stage = $(".stage"), big = $("#d-img");
+  let cur = -1;
+  const show = i => {
+    if (i === cur) return;
+    const first = cur < 0; cur = i;
+    $("#d-thumbs").querySelectorAll("button").forEach((b,j)=>b.setAttribute("aria-current", j===i));
+    const put = () => { big.src = shots[i]; big.alt = `${p.title}, скриншот ${i+1} з ${shots.length}`; };
+    if (first || reduce) { put(); return; }
+    /* плавне перетікання між скриншотами */
+    stage.classList.add("swap");
+    const pre = new Image(); pre.src = shots[i];
+    Promise.all([pre.decode ? pre.decode().catch(() => {}) : null, new Promise(r => setTimeout(r, 250))]).then(() => {
+      if (cur !== i) return;
+      put(); requestAnimationFrame(() => stage.classList.remove("swap"));
+    });
+  };
   $("#d-thumbs").innerHTML = shots.length>1 ? shots.map((s,i)=>`<button type="button" data-i="${i}" aria-label="Скриншот ${i+1}"><img src="${s}" alt=""></button>`).join("") : "";
   $("#d-thumbs").onclick = e => { const b=e.target.closest("button"); if(b) show(+b.dataset.i); };
   show(0);
@@ -702,15 +657,25 @@ function openProject(p){
   $("#d-facts").innerHTML = [["Клієнт",p.client],["Моя роль",p.role],["Термін",p.duration],["Рік",p.year]].filter(f=>f[1]).map(([k,v])=>`<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("");
   $("#d-stack").innerHTML = p.stack.map(s=>`<li>${esc(s)}</li>`).join("");
   $("#d-links").innerHTML = (p.links||[]).map((l,i)=>`<a class="pill${i===0?' accent':' ghost'}" href="${esc(l.href)}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`).join("");
+  clearTimeout(closeTimer); dlg.classList.remove("closing");
   if (!dlg.open) dlg.showModal();
+  dlg.focus({ preventScroll: true });
   dlg.scrollTop = 0;
 }
 function route(){
   const id = location.hash.replace(/^#p-/, "");
   const p = location.hash.startsWith("#p-") && PROJECTS.find(x=>x.id===id);
-  if (p) openProject(p); else if (dlg.open) dlg.close();
+  if (p) openProject(p); else closeDetail();
 }
-function closeDetail(){ if (dlg.open) dlg.close(); }
+/* закриття: сторінка проєкту плавно згасає, а не зникає різко */
+function closeDetail(){
+  if (!dlg.open || dlg.classList.contains("closing")) return;
+  if (reduce) { dlg.close(); return; }
+  dlg.classList.add("closing");
+  closeTimer = setTimeout(() => { dlg.classList.remove("closing"); dlg.close(); }, 280);
+}
+let closeTimer = 0;
+dlg.addEventListener("cancel", e => { e.preventDefault(); closeDetail(); });
 dlg.addEventListener("close", () => { if (location.hash.startsWith("#p-")) { try { history.replaceState(null, "", location.pathname + location.search); } catch(e) { location.hash = "work"; } } });
 $("#d-close").addEventListener("click", closeDetail);
 dlg.addEventListener("click", e => { if (e.target === dlg) closeDetail(); });
