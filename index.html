@@ -138,6 +138,9 @@ h2.title{font-family:var(--display);font-weight:500;font-size:clamp(36px,6vw,80p
 .frame{position:relative}
 .frame .soft{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;scale:1.06;pointer-events:none}
 .rv-on .proj.in:not(.done) .frame .soft{will-change:opacity;animation:softout var(--dur,1.2s) cubic-bezier(.4,0,.2,1) var(--delay,0s) both}
+/* текст картки теж спочатку розмитий: замість літер лише їхня м'яка тінь */
+.rv-on .proj.in:not(.done) .info *{animation:txtfocus var(--dur,1.2s) cubic-bezier(.4,0,.2,1) var(--delay,0s) both}
+@keyframes txtfocus{0%{color:transparent;border-color:transparent;text-shadow:0 0 14px rgba(241,238,232,.75)}45%{color:transparent;border-color:transparent;text-shadow:0 0 7px rgba(241,238,232,.75)}100%{text-shadow:0 0 0 transparent}}
 @keyframes cardin{0%{opacity:0}45%,100%{opacity:1}}
 @keyframes softout{0%,40%{opacity:1}100%{opacity:0}}
 @media (prefers-reduced-motion:reduce){.filters button,.filters .ind{animation:none}.filters.ready .ind,.stack{transition:none}.rv-on .proj:not(.done),.rv-on .proj.in:not(.done){opacity:1;filter:none;animation:none}}
