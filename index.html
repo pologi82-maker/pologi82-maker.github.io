@@ -191,7 +191,31 @@ dialog[open] .stage.d-anim{animation:cardin 1s cubic-bezier(.4,0,.2,1) backwards
 .cols h3{font-size:13px;font-weight:400;color:var(--muted);margin:0 0 8px}
 .cols section+section{margin-top:28px}
 .cols p{margin:0;max-width:62ch}
-.cols ul.done{margin:0;padding-left:20px;display:grid;gap:6px}
+.cols ul.done{margin:0;padding:0;list-style:none;display:grid;gap:12px}
+.cols ul.done li{max-width:66ch}
+.cols ul.done b,.res li::before{font-weight:500;color:var(--fg)}
+.cols section+section{margin-top:36px}
+@media (min-width:821px){.facts{position:sticky;top:96px;align-self:start}}
+/* ключові цифри проєкту */
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-top:28px}
+.stats[hidden]{display:none}
+.stats div{background:var(--bg);padding:20px 22px;min-width:0}
+.stats b{display:block;font-weight:400;font-size:clamp(26px,3vw,36px);line-height:1.1;letter-spacing:-.03em;color:var(--fg)}
+.stats span{display:block;margin-top:8px;font-size:13px;line-height:1.45;color:var(--muted)}
+@media (max-width:820px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* з чого складається продукт */
+.parts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.parts div{border:1px solid var(--line);border-radius:14px;padding:18px 20px;min-width:0}
+.parts b{display:block;font-weight:500;margin-bottom:6px}
+.parts p{margin:0;color:var(--muted);font-size:15px;line-height:1.6}
+@media (max-width:560px){.parts{grid-template-columns:minmax(0,1fr)}}
+/* кроки: справжня послідовність, тому з номерами */
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:12px;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:30px minmax(0,1fr);gap:14px;align-items:start}
+.steps li::before{content:counter(s);width:30px;height:30px;border-radius:50%;border:1px solid var(--accent);color:var(--accent);display:grid;place-items:center;font-size:13px;font-weight:400}
+.res{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.res li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;font-size:17px}
+.res li::before{content:"✓";color:var(--accent)}
 .facts{display:grid;gap:22px;align-content:start;border-left:1px solid var(--line);padding-left:28px}
 .facts dl{margin:0;display:grid;gap:16px}
 .facts dt{font-size:13px;color:var(--muted)}
@@ -260,11 +284,14 @@ dialog[open] .stage.d-anim{animation:cardin 1s cubic-bezier(.4,0,.2,1) backwards
     <p class="lead d-anim" id="d-lead" style="--n:1"></p>
     <div class="stage d-anim" style="--n:2"><img id="d-img" alt=""></div>
     <div class="thumbs d-anim" id="d-thumbs" style="--n:3"></div>
+    <div class="stats d-anim" id="d-stats" style="--n:4"></div>
     <div class="cols">
       <div>
-        <section class="d-anim" style="--n:4"><h3>Задача</h3><p id="d-task"></p></section>
-        <section class="d-anim" style="--n:5"><h3>Що зроблено</h3><ul class="done" id="d-done"></ul></section>
-        <section class="d-anim" style="--n:6"><h3>Результат</h3><p class="result" id="d-result"></p></section>
+        <section class="d-anim" style="--n:5"><h3>Задача</h3><p id="d-task"></p></section>
+        <section class="d-anim" style="--n:6" data-sec><h3>Що всередині</h3><div class="parts" id="d-parts"></div></section>
+        <section class="d-anim" style="--n:7" data-sec><h3 id="d-flow-title">Як це працює</h3><ol class="steps" id="d-flow"></ol></section>
+        <section class="d-anim" style="--n:8"><h3>Що зробив я</h3><ul class="done" id="d-done"></ul></section>
+        <section class="d-anim" style="--n:9"><h3>Результат</h3><div id="d-result"></div></section>
       </div>
       <aside class="facts">
         <dl id="d-facts" class="d-anim" style="--n:4"></dl>
@@ -285,8 +312,61 @@ const TAGLINE = ["Сайти", "Веб-сервіси", "Мобільні дод
 const CATEGORIES = { web: "Сайти", saas: "Веб-сервіси", app: "Мобільні додатки" };
 
 /* Проєкти. images: шляхи до скриншотів, напр. ["images/zerno-1.png"].
-   Поки images порожній, показується намальований макет у кольорі hue (0–360). */
+   Поки images порожній, показується намальований макет у кольорі hue (0–360).
+
+   ШАБЛОН ОПИСУ (однаковий для всіх проєктів):
+   summary  — одне речення: що це і для кого.
+   task     — 2–3 речення: як було до і що треба було отримати.
+   stats    — 3–4 ключові цифри: { n: "13", t: "що означає ця цифра" }.
+   parts    — з чого складається продукт: { t: "Назва частини", d: "1–2 речення по суті" }.
+   flow     — (за потреби) як це працює крок за кроком, 4–6 коротких кроків.
+   done     — що зробив я: [ "Напрям", "Коротко, що саме і навіщо" ].
+   result   — 3–4 пункти: що отримав замовник.
+   Мова проста, речення короткі, без канцеляриту; терміни лише там, де без них ніяк. */
 const PROJECTS = [
+  {
+    id: "dailywater", category: "saas", year: 2026, hue: 200,
+    title: "DailyWaterKyiv",
+    summary: "Сервіс доставки питної води по Києву: клієнт замовляє на сайті, менеджер підтверджує в адмінці, водій отримує замовлення в застосунку на телефоні.",
+    client: "Служба доставки води 19 л, Київ", role: "Розробка, аудит безпеки, запуск",
+    task: "Компанія приймала замовлення телефоном і в месенджерах. Потрібна була одна система: клієнт замовляє воду сам за хвилину, менеджер бачить усі замовлення в одному місці, а водій отримує лише свої адреси, без дзвінків. І все це разом із CRM та Telegram, якими компанія вже користується.",
+    stats: [
+      { n: "3 в 1", t: "сайт, застосунок водія й адмінка" },
+      { n: "13", t: "проблем безпеки знайдено й закрито, 3 критичні" },
+      { n: "1 хв", t: "синхронізація з CRM SendPulse" },
+      { n: "UA / RU", t: "дві мови, встановлюється як застосунок" }
+    ],
+    parts: [
+      { t: "Сайт для клієнтів", d: "Вода 19 л разово або підписка на 4, 6 чи 8 бутлів зі знижкою. Замовлення за хвилину: адреса, день, зручний інтервал, оплата при отриманні. Карта районів та історія замовлень." },
+      { t: "Застосунок водія", d: "Лише свої замовлення у своїх районах. «Взяти» → «Поїхали» → «Доставлено», дзвінок клієнту, маршрут у Google Maps, карта адрес і звірка каси за день." },
+      { t: "Адмін-панель", d: "Підтвердження замовлень, призначення водіїв, райони, графік і доступи. Контакти сайту змінюються тут і одразу видні на сайті, без програміста." },
+      { t: "Telegram і CRM", d: "Кожне замовлення приходить менеджерам у Telegram, адмін бачить аналітику за день чи період. Замовлення, статуси й ціни синхронізуються з SendPulse в обидва боки." }
+    ],
+    flowTitle: "Шлях замовлення",
+    flow: [
+      "Клієнт оформлює замовлення на сайті або з телефона.",
+      "Сервер перевіряє дані й сам рахує суму за цінами з бази.",
+      "Замовлення отримує водій свого району, у CRM з'являється угода, у Telegram — сповіщення.",
+      "Менеджер підтверджує, і замовлення з'являється в застосунку водія.",
+      "Водій відмічає «В дорозі» і «Доставлено», CRM оновлюється сама."
+    ],
+    done: [
+      ["Розробка", "Зібрав сайт, застосунок водія, адмінку й інтеграції на платформі Hercules разом з ШІ-інструментами (Claude, Gemini)."],
+      ["Безпека", "Провів аудит і закрив 13 проблем. Найважливіше: дані клієнтів були доступні без входу, паролі зберігались відкритим текстом, а суму замовлення можна було підмінити. Тепер є вхід із сесіями, хешовані паролі, сума рахується на сервері, діє захист від спаму."],
+      ["Виправлення", "Сповіщення в Telegram більше не губляться, статистика рахується за київським часом, дата доставки після опівночі правильна, після оновлення завжди відкривається свіжа версія сайту."],
+      ["Запуск", "Переніс сервіс на домен клієнта dailywater.delivery, налаштував DNS, SSL і деплой, передав код у репозиторій клієнта."],
+      ["Зручність", "Контакти сайту клієнт змінює сам, кнопка «Встановити додаток» працює в усіх браузерах, меню веде до потрібного блоку з будь-якої сторінки."]
+    ],
+    result: [
+      "Замовлення приходять через сайт, а не телефоном.",
+      "Водії працюють із застосунку, без дзвінків і переписок.",
+      "Дані клієнтів і адмінка захищені.",
+      "Сервіс працює на домені клієнта, а код лежить у його репозиторії."
+    ],
+    stack: ["React", "TypeScript", "Convex", "PWA", "Tailwind CSS", "Leaflet", "SendPulse API", "Telegram Bot API", "Vercel"],
+    links: [{ label: "Відкрити сайт", href: "https://dailywater.delivery" }],
+    images: [], mocks: ["hero", "ring", "dash"]
+  },
   {
     id: "zerno", category: "web", year: 2025, hue: 24,
     title: "Кавʼярня «Зерно»",
@@ -441,7 +521,7 @@ function mockApp(h, first){
 }
 function shotsFor(p){
   if (p.images && p.images.length) return p.images;
-  return (p.mocks||["hero"]).map(k => p.category==="app" ? mockApp(p.hue, k) : mockWeb(p.hue, k));
+  return (p.mocks||["hero"]).map(k => ["ring","list","tiles"].includes(k) ? mockApp(p.hue, k) : mockWeb(p.hue, k));
 }
 
 /* фірмовий напис: кожна літера намальована вручну на сітці і малюється лінією */
@@ -662,8 +742,14 @@ function openProject(p){
   $("#d-thumbs").onclick = e => { const b=e.target.closest("button"); if(b) show(+b.dataset.i); };
   show(0);
   $("#d-task").textContent = p.task;
-  $("#d-done").innerHTML = p.done.map(d=>`<li>${esc(d)}</li>`).join("");
-  $("#d-result").textContent = p.result;
+  /* необов'язкові блоки ховаються, якщо в проєкті їх немає */
+  const fill = (id, list, html) => { const el = $(id), box = el.closest("[data-sec]") || el; box.hidden = !(list && list.length); el.innerHTML = list && list.length ? html(list) : ""; };
+  fill("#d-stats", p.stats, l => l.map(s => `<div><b>${esc(s.n)}</b><span>${esc(s.t)}</span></div>`).join(""));
+  fill("#d-parts", p.parts, l => l.map(s => `<div><b>${esc(s.t)}</b><p>${esc(s.d)}</p></div>`).join(""));
+  fill("#d-flow", p.flow, l => l.map(s => `<li>${esc(s)}</li>`).join(""));
+  $("#d-flow-title").textContent = p.flowTitle || "Як це працює";
+  $("#d-done").innerHTML = p.done.map(d => Array.isArray(d) ? `<li><b>${esc(d[0])}.</b> ${esc(d[1])}</li>` : `<li>${esc(d)}</li>`).join("");
+  $("#d-result").innerHTML = Array.isArray(p.result) ? `<ul class="res">${p.result.map(r => `<li>${esc(r)}</li>`).join("")}</ul>` : `<p class="result">${esc(p.result)}</p>`;
   $("#d-facts").innerHTML = [["Клієнт",p.client],["Моя роль",p.role],["Термін",p.duration],["Рік",p.year]].filter(f=>f[1]).map(([k,v])=>`<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("");
   $("#d-stack").innerHTML = p.stack.map(s=>`<li>${esc(s)}</li>`).join("");
   $("#d-links").innerHTML = (p.links||[]).map((l,i)=>`<a class="pill${i===0?' accent':' ghost'}" href="${esc(l.href)}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`).join("");
