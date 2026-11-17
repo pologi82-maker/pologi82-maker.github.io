@@ -290,8 +290,7 @@ dialog[open] .stage.d-anim{animation:cardin 1s cubic-bezier(.4,0,.2,1) backwards
         <section class="d-anim" style="--n:5"><h3>Задача</h3><p id="d-task"></p></section>
         <section class="d-anim" style="--n:6" data-sec><h3>Що всередині</h3><div class="parts" id="d-parts"></div></section>
         <section class="d-anim" style="--n:7" data-sec><h3 id="d-flow-title">Як це працює</h3><ol class="steps" id="d-flow"></ol></section>
-        <section class="d-anim" style="--n:8"><h3>Що зробив я</h3><ul class="done" id="d-done"></ul></section>
-        <section class="d-anim" style="--n:9"><h3>Результат</h3><div id="d-result"></div></section>
+        <section class="d-anim" style="--n:8" data-sec><h3>Що ще вміє</h3><ul class="res" id="d-more"></ul></section>
       </div>
       <aside class="facts">
         <dl id="d-facts" class="d-anim" style="--n:4"></dl>
@@ -320,8 +319,8 @@ const CATEGORIES = { web: "Сайти", saas: "Веб-сервіси", app: "М�
    stats    — 3–4 ключові цифри: { n: "13", t: "що означає ця цифра" }.
    parts    — з чого складається продукт: { t: "Назва частини", d: "1–2 речення по суті" }.
    flow     — (за потреби) як це працює крок за кроком, 4–6 коротких кроків.
-   done     — що зробив я: [ "Напрям", "Коротко, що саме і навіщо" ].
-   result   — 3–4 пункти: що отримав замовник.
+   more     — «Що ще вміє»: 3–5 можливостей, яких НЕМАЄ в блоках вище (без повторів).
+   Пишемо про продукт, а не звіт про роботу; моя роль — лише одним рядком у role.
    Мова проста, речення короткі, без канцеляриту; терміни лише там, де без них ніяк. */
 const PROJECTS = [
   {
@@ -350,18 +349,12 @@ const PROJECTS = [
       "Менеджер підтверджує, і замовлення з'являється в застосунку водія.",
       "Водій відмічає «В дорозі» і «Доставлено», CRM оновлюється сама."
     ],
-    done: [
-      ["Розробка", "Зібрав сайт, застосунок водія, адмінку й інтеграції на платформі Hercules разом з ШІ-інструментами (Claude, Gemini)."],
-      ["Безпека", "Провів аудит і посилив захист: дані клієнтів доступні лише після входу, паролі зашифровані, суму замовлення рахує сервер, діє захист від спаму."],
-      ["Виправлення", "Сповіщення в Telegram більше не губляться, статистика рахується за київським часом, дата доставки після опівночі правильна, після оновлення завжди відкривається свіжа версія сайту."],
-      ["Запуск", "Переніс сервіс на домен клієнта dailywater.delivery, налаштував DNS, SSL і деплой, передав код у репозиторій клієнта."],
-      ["Зручність", "Контакти сайту клієнт змінює сам, кнопка «Встановити додаток» працює в усіх браузерах, меню веде до потрібного блоку з будь-якої сторінки."]
-    ],
-    result: [
-      "Замовлення приходять через сайт, а не телефоном.",
-      "Водії працюють із застосунку, без дзвінків і переписок.",
-      "Дані клієнтів і адмінка захищені.",
-      "Сервіс працює на домені клієнта, а код лежить у його репозиторії."
+    more: [
+      "Встановлюється на телефон як звичайний застосунок і оновлюється сам, без магазинів застосунків.",
+      "Нові замовлення з'являються в адмінці й у водія миттєво, без оновлення сторінки.",
+      "Окремий захищений вхід для клієнтів, водіїв і адміністраторів.",
+      "Експорт замовлень у Google Sheets для звітів.",
+      "Захист від спаму: ліміт замовлень з одного номера на добу."
     ],
     stack: ["React", "TypeScript", "Convex", "PWA", "Tailwind CSS", "Leaflet", "SendPulse API", "Telegram Bot API", "Vercel"],
     links: [{ label: "Відкрити сайт", href: "https://dailywater.delivery" }],
@@ -748,8 +741,7 @@ function openProject(p){
   fill("#d-parts", p.parts, l => l.map(s => `<div><b>${esc(s.t)}</b><p>${esc(s.d)}</p></div>`).join(""));
   fill("#d-flow", p.flow, l => l.map(s => `<li>${esc(s)}</li>`).join(""));
   $("#d-flow-title").textContent = p.flowTitle || "Як це працює";
-  $("#d-done").innerHTML = p.done.map(d => Array.isArray(d) ? `<li><b>${esc(d[0])}.</b> ${esc(d[1])}</li>` : `<li>${esc(d)}</li>`).join("");
-  $("#d-result").innerHTML = Array.isArray(p.result) ? `<ul class="res">${p.result.map(r => `<li>${esc(r)}</li>`).join("")}</ul>` : `<p class="result">${esc(p.result)}</p>`;
+  fill("#d-more", p.more, l => l.map(s => `<li>${esc(s)}</li>`).join(""));
   $("#d-facts").innerHTML = [["Клієнт",p.client],["Моя роль",p.role],["Термін",p.duration],["Рік",p.year]].filter(f=>f[1]).map(([k,v])=>`<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("");
   $("#d-stack").innerHTML = p.stack.map(s=>`<li>${esc(s)}</li>`).join("");
   $("#d-links").innerHTML = (p.links||[]).map((l,i)=>`<a class="pill${i===0?' accent':' ghost'}" href="${esc(l.href)}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`).join("");
